@@ -1,0 +1,12 @@
+{
+    "python.pythonPath": "~/.venvs/global_env/bin/python",
+    "python.venvPath": "~/.venvs",
+    "python.analysis.autoSearchPaths": true,
+
+
+    "python.analysis.useLibraryCodeForTypes": true,
+    "python.languageServer": "Pylance"
+
+
+
+}
