@@ -1,0 +1,9 @@
+Her er:
+
+G = generatoren (U-Net).
+
+D =  discriminatoren.
+
+x =  ekte bilder fra datasettet.
+
+z = støy (eller latent variabel) som generatoren bruker for å lage bilder.

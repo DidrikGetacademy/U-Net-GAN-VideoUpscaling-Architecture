@@ -1,0 +1,259 @@
+[
+    {
+        "label": "torch.multiprocessing",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "torch.multiprocessing",
+        "description": "torch.multiprocessing",
+        "detail": "torch.multiprocessing",
+        "documentation": {}
+    },
+    {
+        "label": "torch",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "torch",
+        "description": "torch",
+        "detail": "torch",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "sys",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "sys",
+        "description": "sys",
+        "detail": "sys",
+        "documentation": {}
+    },
+    {
+        "label": "deepspeed",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "deepspeed",
+        "description": "deepspeed",
+        "detail": "deepspeed",
+        "documentation": {}
+    },
+    {
+        "label": "torchvision.transforms",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "torchvision.transforms",
+        "description": "torchvision.transforms",
+        "detail": "torchvision.transforms",
+        "documentation": {}
+    },
+    {
+        "label": "DataLoader",
+        "importPath": "torch.utils.data",
+        "description": "torch.utils.data",
+        "isExtraImport": true,
+        "detail": "torch.utils.data",
+        "documentation": {}
+    },
+    {
+        "label": "UNET",
+        "importPath": "UNET_Discriminator",
+        "description": "UNET_Discriminator",
+        "isExtraImport": true,
+        "detail": "UNET_Discriminator",
+        "documentation": {}
+    },
+    {
+        "label": "Discriminator",
+        "importPath": "UNET_Discriminator",
+        "description": "UNET_Discriminator",
+        "isExtraImport": true,
+        "detail": "UNET_Discriminator",
+        "documentation": {}
+    },
+    {
+        "label": "Vimeo90KDataset",
+        "importPath": "Datasets",
+        "description": "Datasets",
+        "isExtraImport": true,
+        "detail": "Datasets",
+        "documentation": {}
+    },
+    {
+        "label": "torch.nn",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "torch.nn",
+        "description": "torch.nn",
+        "detail": "torch.nn",
+        "documentation": {}
+    },
+    {
+        "label": "torch.nn.functional",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "torch.nn.functional",
+        "description": "torch.nn.functional",
+        "detail": "torch.nn.functional",
+        "documentation": {}
+    },
+    {
+        "label": "train_gan",
+        "kind": 2,
+        "importPath": "Training",
+        "description": "Training",
+        "peekOfCode": "def train_gan(generator, discriminator, dataloader, criterion, num_epochs=NUM_EPOCHS):\n    # Wrap generator with DeepSpeed\n    generator, optimizer_g, _, _ = deepspeed.initialize(\n        model=generator,\n        model_parameters=generator.parameters(),\n        config=DS_CONFIG\n    )\n    # Wrap discriminator with DeepSpeed\n    discriminator, optimizer_d, _, _ = deepspeed.initialize(\n        model=discriminator,",
+        "detail": "Training",
+        "documentation": {}
+    },
+    {
+        "label": "project_root",
+        "kind": 5,
+        "importPath": "Training",
+        "description": "Training",
+        "peekOfCode": "project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), \"../\"))\nsys.path.insert(0, project_root)\nfrom UNET_Discriminator import UNET, Discriminator  \nfrom Datasets import Vimeo90KDataset  # Ensure this dataset class is correctly implemented\n#NOTES---> GAN Loss: Vurder å bruke MSE Loss eller Perceptual Loss for mer stabil trening.  \n#DeepSpeed: Sjekk konfigurasjonen i ds_config.json for korrekt innstilling av mikrobatching og gradientakkumulering.\n# ==========================\n# CONFIGURATION\n# ==========================\nDEVICE = torch.device(\"cuda\" if torch.cuda.is_available() else \"cpu\")",
+        "detail": "Training",
+        "documentation": {}
+    },
+    {
+        "label": "DEVICE",
+        "kind": 5,
+        "importPath": "Training",
+        "description": "Training",
+        "peekOfCode": "DEVICE = torch.device(\"cuda\" if torch.cuda.is_available() else \"cpu\")\nBATCH_SIZE = 8\nNUM_EPOCHS = 10\nDS_CONFIG = \"ds_config.json\"  # Ensure this config file exists\n# ==========================\n# DATASET & DATALOADER\n# ==========================\ntransform = transforms.Compose([\n    transforms.ToTensor(),\n    transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])",
+        "detail": "Training",
+        "documentation": {}
+    },
+    {
+        "label": "BATCH_SIZE",
+        "kind": 5,
+        "importPath": "Training",
+        "description": "Training",
+        "peekOfCode": "BATCH_SIZE = 8\nNUM_EPOCHS = 10\nDS_CONFIG = \"ds_config.json\"  # Ensure this config file exists\n# ==========================\n# DATASET & DATALOADER\n# ==========================\ntransform = transforms.Compose([\n    transforms.ToTensor(),\n    transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])\n])",
+        "detail": "Training",
+        "documentation": {}
+    },
+    {
+        "label": "NUM_EPOCHS",
+        "kind": 5,
+        "importPath": "Training",
+        "description": "Training",
+        "peekOfCode": "NUM_EPOCHS = 10\nDS_CONFIG = \"ds_config.json\"  # Ensure this config file exists\n# ==========================\n# DATASET & DATALOADER\n# ==========================\ntransform = transforms.Compose([\n    transforms.ToTensor(),\n    transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])\n])\n# Load the Vimeo90K dataset",
+        "detail": "Training",
+        "documentation": {}
+    },
+    {
+        "label": "DS_CONFIG",
+        "kind": 5,
+        "importPath": "Training",
+        "description": "Training",
+        "peekOfCode": "DS_CONFIG = \"ds_config.json\"  # Ensure this config file exists\n# ==========================\n# DATASET & DATALOADER\n# ==========================\ntransform = transforms.Compose([\n    transforms.ToTensor(),\n    transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])\n])\n# Load the Vimeo90K dataset\ntrain_dataset = Vimeo90KDataset(root_dir=\"data/Vimeo-90K-Septuplet\", mode=\"train\", transform=transform)",
+        "detail": "Training",
+        "documentation": {}
+    },
+    {
+        "label": "transform",
+        "kind": 5,
+        "importPath": "Training",
+        "description": "Training",
+        "peekOfCode": "transform = transforms.Compose([\n    transforms.ToTensor(),\n    transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])\n])\n# Load the Vimeo90K dataset\ntrain_dataset = Vimeo90KDataset(root_dir=\"data/Vimeo-90K-Septuplet\", mode=\"train\", transform=transform)\ntest_dataset = Vimeo90KDataset(root_dir=\"data/Vimeo-90K-Septuplet\", mode=\"test\", transform=transform)\n# Create DataLoaders\ntrain_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=4, pin_memory=True)\ntest_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=4, pin_memory=True)",
+        "detail": "Training",
+        "documentation": {}
+    },
+    {
+        "label": "train_dataset",
+        "kind": 5,
+        "importPath": "Training",
+        "description": "Training",
+        "peekOfCode": "train_dataset = Vimeo90KDataset(root_dir=\"data/Vimeo-90K-Septuplet\", mode=\"train\", transform=transform)\ntest_dataset = Vimeo90KDataset(root_dir=\"data/Vimeo-90K-Septuplet\", mode=\"test\", transform=transform)\n# Create DataLoaders\ntrain_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=4, pin_memory=True)\ntest_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=4, pin_memory=True)\n# Debugging: Check sample data\nfor lr, hr in train_loader:\n    print(\"Low-Res Image Shape:\", lr.shape)\n    print(\"High-Res Image Shape:\", hr.shape)\n    break",
+        "detail": "Training",
+        "documentation": {}
+    },
+    {
+        "label": "test_dataset",
+        "kind": 5,
+        "importPath": "Training",
+        "description": "Training",
+        "peekOfCode": "test_dataset = Vimeo90KDataset(root_dir=\"data/Vimeo-90K-Septuplet\", mode=\"test\", transform=transform)\n# Create DataLoaders\ntrain_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=4, pin_memory=True)\ntest_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=4, pin_memory=True)\n# Debugging: Check sample data\nfor lr, hr in train_loader:\n    print(\"Low-Res Image Shape:\", lr.shape)\n    print(\"High-Res Image Shape:\", hr.shape)\n    break\n# ==========================",
+        "detail": "Training",
+        "documentation": {}
+    },
+    {
+        "label": "train_loader",
+        "kind": 5,
+        "importPath": "Training",
+        "description": "Training",
+        "peekOfCode": "train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=4, pin_memory=True)\ntest_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=4, pin_memory=True)\n# Debugging: Check sample data\nfor lr, hr in train_loader:\n    print(\"Low-Res Image Shape:\", lr.shape)\n    print(\"High-Res Image Shape:\", hr.shape)\n    break\n# ==========================\n# INITIALIZE MODELS\n# ==========================",
+        "detail": "Training",
+        "documentation": {}
+    },
+    {
+        "label": "test_loader",
+        "kind": 5,
+        "importPath": "Training",
+        "description": "Training",
+        "peekOfCode": "test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=4, pin_memory=True)\n# Debugging: Check sample data\nfor lr, hr in train_loader:\n    print(\"Low-Res Image Shape:\", lr.shape)\n    print(\"High-Res Image Shape:\", hr.shape)\n    break\n# ==========================\n# INITIALIZE MODELS\n# ==========================\ngenerator = UNET(in_channels=3, out_channels=3).to(DEVICE)",
+        "detail": "Training",
+        "documentation": {}
+    },
+    {
+        "label": "generator",
+        "kind": 5,
+        "importPath": "Training",
+        "description": "Training",
+        "peekOfCode": "generator = UNET(in_channels=3, out_channels=3).to(DEVICE)\ndiscriminator = Discriminator(in_channels=3).to(DEVICE)\n# Define loss function (Binary Cross-Entropy with Logits)\ncriterion = torch.nn.BCEWithLogitsLoss()\n# ==========================\n# TRAINING FUNCTION\n# ==========================\ndef train_gan(generator, discriminator, dataloader, criterion, num_epochs=NUM_EPOCHS):\n    # Wrap generator with DeepSpeed\n    generator, optimizer_g, _, _ = deepspeed.initialize(",
+        "detail": "Training",
+        "documentation": {}
+    },
+    {
+        "label": "discriminator",
+        "kind": 5,
+        "importPath": "Training",
+        "description": "Training",
+        "peekOfCode": "discriminator = Discriminator(in_channels=3).to(DEVICE)\n# Define loss function (Binary Cross-Entropy with Logits)\ncriterion = torch.nn.BCEWithLogitsLoss()\n# ==========================\n# TRAINING FUNCTION\n# ==========================\ndef train_gan(generator, discriminator, dataloader, criterion, num_epochs=NUM_EPOCHS):\n    # Wrap generator with DeepSpeed\n    generator, optimizer_g, _, _ = deepspeed.initialize(\n        model=generator,",
+        "detail": "Training",
+        "documentation": {}
+    },
+    {
+        "label": "criterion",
+        "kind": 5,
+        "importPath": "Training",
+        "description": "Training",
+        "peekOfCode": "criterion = torch.nn.BCEWithLogitsLoss()\n# ==========================\n# TRAINING FUNCTION\n# ==========================\ndef train_gan(generator, discriminator, dataloader, criterion, num_epochs=NUM_EPOCHS):\n    # Wrap generator with DeepSpeed\n    generator, optimizer_g, _, _ = deepspeed.initialize(\n        model=generator,\n        model_parameters=generator.parameters(),\n        config=DS_CONFIG",
+        "detail": "Training",
+        "documentation": {}
+    },
+    {
+        "label": "UNET",
+        "kind": 6,
+        "importPath": "UNET_Discriminator",
+        "description": "UNET_Discriminator",
+        "peekOfCode": "class UNET(nn.Module):\n    def __init__(self,in_channels,out_channels):\n        super(UNET,self).__init__()\n        #ENCODER ----\n        #The choice of 64 is a reasonable starting point for the number of filters in the first layer, as it captures basic features like edges, textures, and patterns.\n        self.enc1 = self.conv_block(in_channels,64)\n        #After the first layer, the model will downsample the feature map (reduce its spatial dimensions using pooling), and at the same time, it learns more abstract features.\n        self.enc2 = self.conv_block(64, 128)\n        #As you go deeper into the encoder, the network learns increasingly abstract and complex representations of the data. \n        self.enc3 = self.conv_block(128, 256)",
+        "detail": "UNET_Discriminator",
+        "documentation": {}
+    },
+    {
+        "label": "Discriminator",
+        "kind": 6,
+        "importPath": "UNET_Discriminator",
+        "description": "UNET_Discriminator",
+        "peekOfCode": "class Discriminator(nn.Module):\n    def __init__(self,in_channels):\n        super(Discriminator, self).__init__()\n        #The nn.Sequential container in PyTorch allows you to create a model by stacking layers in a sequence. It will automatically apply each layer to the input in the order they are defined. This is a compact and efficient way to define a network where the flow of data is straightforward from one layer to the next.\n        self.model = nn.Sequential(\n            nn.Conv2d(in_channels, 64, kernel_size=3, stride=2, padding=1),\n            nn.LeakyReLU(0.2),\n            nn.Conv2d(64, 128, kernel_size=3, stride=2, padding=1),\n            nn.LeakyReLU(0.2),\n            nn.Conv2d(128, 256, kernel_size=3, stride=2, padding=1),",
+        "detail": "UNET_Discriminator",
+        "documentation": {}
+    },
+    {
+        "label": "project_root",
+        "kind": 5,
+        "importPath": "UNET_Discriminator",
+        "description": "UNET_Discriminator",
+        "peekOfCode": "project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), \"../\"))\nsys.path.insert(0, project_root)\nclass UNET(nn.Module):\n    def __init__(self,in_channels,out_channels):\n        super(UNET,self).__init__()\n        #ENCODER ----\n        #The choice of 64 is a reasonable starting point for the number of filters in the first layer, as it captures basic features like edges, textures, and patterns.\n        self.enc1 = self.conv_block(in_channels,64)\n        #After the first layer, the model will downsample the feature map (reduce its spatial dimensions using pooling), and at the same time, it learns more abstract features.\n        self.enc2 = self.conv_block(64, 128)",
+        "detail": "UNET_Discriminator",
+        "documentation": {}
+    }
+]
