@@ -23,23 +23,23 @@ class CombinedVideoModel(nn.Module):
         self.esrgan = VideoESRGAN(in_channels, out_channels)
 
         # Video Discriminator for adversarial loss
-        self.discriminator = VideoDiscriminator(in_channels)
+      #  self.discriminator = VideoDiscriminator(in_channels)
 
         # Video Patch Discriminator for patch-wise adversarial loss
-        self.patch_discriminator = VideoPatchDiscriminator(in_channels)
+        #self.patch_discriminator = VideoPatchDiscriminator(in_channels)
 
     def forward(self, x):
         # Forward pass through U-Net for enhancement or segmentation
-        enhanced_output = self.unet(x)
+        unet_output = self.unet(x)
 
         # Forward pass through ESRGAN for super-resolution
-        sr_output = self.esrgan(enhanced_output)
+        esgran_output = self.esrgan(unet_output)
 
         # Forward pass through Discriminators (for adversarial training)
-        disc_output = self.discriminator(sr_output)
-        patch_disc_output = self.patch_discriminator(sr_output)
+        #disc_output = self.discriminator(esgran_output)
+        #patch_disc_output = self.patch_discriminator(esgran_output)
 
-        return sr_output, enhanced_output, disc_output, patch_disc_output
+        return esgran_output, unet_output
 
 
 
@@ -112,33 +112,43 @@ class VideoUNet(nn.Module):
 
 
 #INPUT--->[batch_size, 3, 7, 448, 256]
+
+
 class VideoESRGAN(nn.Module):
     def __init__(self, in_channels, out_channels):
         super(VideoESRGAN, self).__init__()
 
+        # Initial feature extraction
         self.conv1 = nn.Conv3d(in_channels, 64, kernel_size=3, padding=1)
 
+        # Residual Blocks
         self.rrdb_blocks = nn.Sequential(
             *[ResidualDenseBlock(64) for _ in range(16)] 
         )
 
-        # Upsampling layers using PixelShuffle
-        self.upsample1 = nn.Conv3d(64, 256, kernel_size=3, padding=1)
-        self.pixel_shuffle1 = nn.PixelShuffle(2)  # Upscales by 2×
+        # Upsampling layers
+        self.upsample1 = nn.Conv3d(64, 64, kernel_size=3, padding=1)
+        self.upsample1_scale = nn.Upsample(scale_factor=(1,2,2), mode="trilinear", align_corners=False)
 
-        self.upsample2 = nn.Conv3d(64, 256, kernel_size=3, padding=1)
-        self.pixel_shuffle2 = nn.PixelShuffle(2)  # Another 2× upscale
+        self.upsample2 = nn.Conv3d(64, 64, kernel_size=3, padding=1)
+        self.upsample2_scale = nn.Upsample(scale_factor=(1,2,2), mode="trilinear", align_corners=False)
 
+        # Final convolution
         self.final_conv = nn.Conv3d(64, out_channels, kernel_size=3, padding=1)
 
     def forward(self, x):
-        x = self.conv1(x)
-        x = self.rrdb_blocks(x)
+        x = self.conv1(x)  # Initial feature extraction
+        x = self.rrdb_blocks(x)  # Residual processing
 
-        x = self.pixel_shuffle1(self.upsample1(x))
-        x = self.pixel_shuffle2(self.upsample2(x))
+        # Upscaling
+        x = self.upsample1(x)
+        x = self.upsample1_scale(x)
+
+        x = self.upsample2(x)
+        x = self.upsample2_scale(x)
 
         return self.final_conv(x)
+
 
 
 

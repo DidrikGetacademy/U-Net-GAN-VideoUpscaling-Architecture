@@ -1,8 +1,8 @@
 import os
 import sys
+import logging
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../"))
 sys.path.insert(0, project_root)
-import logging
 def setup_logger(name, log_file, level=logging.INFO):
     logger = logging.getLogger(name)
     if not logger.hasHandlers():  

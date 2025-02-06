@@ -4,11 +4,10 @@
   "gradient_accumulation_steps": 4,
   "fp16": {
     "enabled": true,
-    "loss_scale": 0,
-    "initial_scale_power": 32
+    "dynamic_loss_scale": true
   },
   "zero_optimization": {
-    "stage": 2,
+    "stage": 3,
     "offload_optimizer": {
       "device": "cpu",
       "pin_memory": true
@@ -17,26 +16,47 @@
       "device": "cpu",
       "pin_memory": true
     },
-    "allgather_partitions": true,
-    "reduce_scatter": true,
+    "contiguous_gradients": true,
     "overlap_comm": true,
-    "contiguous_gradients": true
+    "reduce_scatter": true,
+    "allgather_bucket_size": 250000000,
+    "allgather_partitions": true,
+    "prefetch_bucket_size": 25000000,
+    "sub_group_size": 1000000
   },
   "optimizer": {
     "type": "AdamW",
     "params": {
-      "lr": 1e-4,
-      "weight_decay": 0.01
+      "lr": 0.0003,
+      "weight_decay": 0.0001,
+      "betas": [0.9, 0.999],
+      "eps": 1e-8
     }
   },
   "scheduler": {
-    "type": "WarmupLR",
+    "type": "WarmupDecayLR",
     "params": {
-      "warmup_min_lr": 1e-6,
-      "warmup_max_lr": 1e-4,
-      "warmup_num_steps": 1000
+      "warmup_min_lr": 0.0,
+      "warmup_max_lr": 0.0003,
+      "warmup_num_steps": 100,
+      "total_num_steps": 2000
     }
   },
-  "steps_per_print": 100,
-  "wall_clock_breakdown": false
+  "gradient_clipping": 1,
+  "steps_per_print": 10,
+"tensorboard": {
+    "enabled": true,
+    "output_path": "/mnt/c/Users/didri/Desktop/Programmering/ArtificalintelligenceModels/UNet_Gan_model_Video_Enchancer/tensorboard_logs",
+    "job_name": "Two_GPU_Training"
+},
+
+  "wall_clock_breakdown": true,
+  "flops_profiler": {
+    "enabled": true
+  },
+  "activation_checkpointing": {
+    "partition_activations": true,
+    "contiguous_memory_optimization": true,
+    "cpu_checkpointing": true
+  }
 }
