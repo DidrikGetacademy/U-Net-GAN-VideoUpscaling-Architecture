@@ -1,13 +1,13 @@
 import torch
-from utils import Return_root_dir
-from logger import setup_logger
+from Externals.utils import Return_root_dir
+from Externals.logger import setup_logger
 import torchvision.transforms as transforms
 import os
 import sys
 root_dir = Return_root_dir()
 train_log_path = os.path.join(root_dir,"Log.txt")
 train_logger = setup_logger('Training_logger', train_log_path)
-from dataset import Vimeo90KSeptuplets
+from datasets.dataset import Vimeo90KSeptuplets
 from torch.utils.data import DataLoader
 
 

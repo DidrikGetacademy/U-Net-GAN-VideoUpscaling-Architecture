@@ -5,8 +5,8 @@ import os
 import sys
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../"))
 sys.path.insert(0, project_root)
-from utils import Return_root_dir
-from logger import setup_logger
+from Externals.utils import Return_root_dir
+from Externals.logger import setup_logger
 root_dir = Return_root_dir()
 train_log_path = os.path.join(root_dir,"Log.txt")
 train_logger = setup_logger('Model_logger', train_log_path)
@@ -16,28 +16,33 @@ class CombinedVideoModel(nn.Module):
     def __init__(self, in_channels, out_channels):
         super(CombinedVideoModel, self).__init__()
 
-        # Video U-Net for video enhancement or segmentation
+   
         self.unet = VideoUNet(in_channels, out_channels)
 
-        # Video ESRGAN for super-resolution (upscaling)
+
         self.esrgan = VideoESRGAN(in_channels, out_channels)
 
         # Video Discriminator for adversarial loss
-      #  self.discriminator = VideoDiscriminator(in_channels)
+        #self.discriminator = VideoDiscriminator(in_channels)
 
-        # Video Patch Discriminator for patch-wise adversarial loss
+        #Video Patch Discriminator for patch-wise adversarial loss
         #self.patch_discriminator = VideoPatchDiscriminator(in_channels)
 
     def forward(self, x):
         # Forward pass through U-Net for enhancement or segmentation
         unet_output = self.unet(x)
 
-        # Forward pass through ESRGAN for super-resolution
-        esgran_output = self.esrgan(unet_output)
 
-        # Forward pass through Discriminators (for adversarial training)
-        #disc_output = self.discriminator(esgran_output)
-        #patch_disc_output = self.patch_discriminator(esgran_output)
+        #DownScale Unet output for esgran too learn upscale
+        low_res = F.interpolate(unet_output, scale_factor=0.25, mode='trilinear', align_corners=False)
+ 
+        esgran_output = self.esrgan(low_res)
+
+
+
+         #Forward pass through Discriminators (for adversarial training)
+         #disc_output = self.discriminator(esgran_output)
+         #patch_disc_output = self.patch_discriminator(esgran_output)
 
         return esgran_output, unet_output
 
@@ -112,8 +117,6 @@ class VideoUNet(nn.Module):
 
 
 #INPUT--->[batch_size, 3, 7, 448, 256]
-
-
 class VideoESRGAN(nn.Module):
     def __init__(self, in_channels, out_channels):
         super(VideoESRGAN, self).__init__()
@@ -137,8 +140,8 @@ class VideoESRGAN(nn.Module):
         self.final_conv = nn.Conv3d(64, out_channels, kernel_size=3, padding=1)
 
     def forward(self, x):
-        x = self.conv1(x)  # Initial feature extraction
-        x = self.rrdb_blocks(x)  # Residual processing
+        x = self.conv1(x) 
+        x = self.rrdb_blocks(x)  
 
         # Upscaling
         x = self.upsample1(x)
@@ -193,7 +196,7 @@ class VideoPatchDiscriminator(nn.Module):
             nn.LeakyReLU(0.2, inplace=True),
 
             nn.Conv3d(512, 1, kernel_size=3, stride=1, padding=1),
-            nn.Sigmoid()  # Outputs probability
+            nn.Sigmoid()  
         )
 
     def forward(self, x):
@@ -214,3 +217,88 @@ class ResidualDenseBlock(nn.Module):
         out = self.leaky_relu(self.conv2(out))
         out = self.leaky_relu(self.conv3(out))
         return x + out  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
